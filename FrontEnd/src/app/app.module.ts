@@ -1,3 +1,4 @@
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
@@ -12,6 +13,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { LoginComponent } from './components/login/login/login.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { MaterialModule } from './material-module';
+import { APIInterceptorService } from './interceptor/apiinterceptor.service';
 
 @NgModule({
   declarations: [
@@ -29,9 +31,14 @@ import { MaterialModule } from './material-module';
     FormsModule,
     MatSliderModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: APIInterceptorService,
+    multi: true,
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

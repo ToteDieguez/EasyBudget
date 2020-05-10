@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CurrentBudgetService } from 'src/app/services/budget/currentBudget/current-budget.service';
 
 @Component({
   selector: 'app-budget',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BudgetComponent implements OnInit {
 
-  constructor() { }
+  helloMessage : any;
+
+  constructor(private currentBudgetService: CurrentBudgetService) { }
 
   ngOnInit() {
+  }
+
+  getHello() {
+    this.currentBudgetService.getCurrentBudget().subscribe(
+        response => {
+          this.helloMessage = response.message;
+        }
+    );
   }
 
 }

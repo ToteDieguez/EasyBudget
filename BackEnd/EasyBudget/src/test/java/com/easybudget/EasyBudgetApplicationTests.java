@@ -1,4 +1,4 @@
-package com.easybudget.EasyBudget;
+package com.easybudget;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
