@@ -19,6 +19,9 @@ export class BudgetComponent implements OnInit {
     this.currentBudgetService.getCurrentBudget().subscribe(
         response => {
           this.helloMessage = response.message;
+        },
+        error => {
+          console.log("An error happened");
         }
     );
   }
