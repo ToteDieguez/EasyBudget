@@ -10,7 +10,7 @@
     <groupId>com.easybudget</groupId>
     <artifactId>application</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>application</name>
     <description>App</description>
 
