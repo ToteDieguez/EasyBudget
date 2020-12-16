@@ -5,6 +5,7 @@ import com.easybudget.user.auth.dto.TokenResponse;
 import com.easybudget.user.auth.exception.AuthenticationException;
 import com.easybudget.user.auth.service.AuthPersonServiceDetail;
 import com.easybudget.user.auth.service.utils.AuthTokenUtil;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class AuthenticationController {
 
     private AuthenticationManager authenticationManager;
@@ -34,13 +36,6 @@ public class AuthenticationController {
 
     @Value("${jwt.http.request.header}")
     private String tokenHeader;
-
-    @Autowired
-    public AuthenticationController(AuthenticationManager authenticationManager, AuthTokenUtil authTokenUtil, AuthPersonServiceDetail authPersonServiceDetail) {
-        this.authenticationManager = authenticationManager;
-        this.authTokenUtil = authTokenUtil;
-        this.authPersonServiceDetail = authPersonServiceDetail;
-    }
 
     @PostMapping(value = "${jwt.get.token.uri}")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody TokenRequest authenticationRequest)

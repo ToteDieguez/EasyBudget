@@ -1,8 +1,11 @@
 package com.easybudget.user.person;
 
+import com.easybudget.shared.EntityBase;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.Transient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -21,14 +24,7 @@ import java.util.Date;
 @Entity
 @Table(name = "person")
 @Getter
-public class Person implements UserDetails {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @Version
-    private Long version;
+public class Person extends EntityBase<Person> implements UserDetails {
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -40,6 +36,8 @@ public class Person implements UserDetails {
     private String lastName;
 
     @Column(name = "password", nullable = false)
+    @JsonIgnore
+    @Transient
     private String password;
 
     @Column(name = "accountNonExpired", nullable = false)

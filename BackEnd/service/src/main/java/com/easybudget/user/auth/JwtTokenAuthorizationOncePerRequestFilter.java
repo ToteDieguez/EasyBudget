@@ -24,56 +24,51 @@ import java.io.IOException;
 
 @Component
 @Slf4j
+@AllArgsConstructor
 public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFilter {
 
-	private AuthPersonServiceDetailImpl jwtInMemoryUserDetailsService;
-	private JwtTokenUtil jwtTokenUtil;
+    private AuthPersonServiceDetailImpl jwtInMemoryUserDetailsService;
+    private JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	public JwtTokenAuthorizationOncePerRequestFilter(AuthPersonServiceDetailImpl jwtInMemoryUserDetailsService, JwtTokenUtil jwtTokenUtil) {
-		this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
-		this.jwtTokenUtil = jwtTokenUtil;
-	}
+    @Value("${jwt.http.request.header}")
+    private String tokenHeader;
 
-	@Value("${jwt.http.request.header}")
-	private String tokenHeader;
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+        log.debug("Authentication Request For '{}'", request.getRequestURL());
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws ServletException, IOException {
-		log.debug("Authentication Request For '{}'", request.getRequestURL());
+        final String requestTokenHeader = request.getHeader(this.tokenHeader);
 
-		final String requestTokenHeader = request.getHeader(this.tokenHeader);
+        String username = null;
+        String jwtToken = null;
+        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+            jwtToken = requestTokenHeader.substring(7);
+            try {
+                username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+            } catch (IllegalArgumentException e) {
+                log.error("JWT_TOKEN_UNABLE_TO_GET_USERNAME", e);
+            } catch (ExpiredJwtException e) {
+                log.warn("JWT_TOKEN_EXPIRED", e);
+            }
+        } else {
+            log.warn("JWT_TOKEN_DOES_NOT_START_WITH_BEARER_STRING");
+        }
 
-		String username = null;
-		String jwtToken = null;
-		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-			jwtToken = requestTokenHeader.substring(7);
-			try {
-				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-			} catch (IllegalArgumentException e) {
-				log.error("JWT_TOKEN_UNABLE_TO_GET_USERNAME", e);
-			} catch (ExpiredJwtException e) {
-				log.warn("JWT_TOKEN_EXPIRED", e);
-			}
-		} else {
-			log.warn("JWT_TOKEN_DOES_NOT_START_WITH_BEARER_STRING");
-		}
+        log.debug("JWT_TOKEN_USERNAME_VALUE '{}'", username);
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-		log.debug("JWT_TOKEN_USERNAME_VALUE '{}'", username);
-		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.jwtInMemoryUserDetailsService.loadUserByUsername(username);
 
-			UserDetails userDetails = this.jwtInMemoryUserDetailsService.loadUserByUsername(username);
+            if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                usernamePasswordAuthenticationToken
+                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            }
+        }
 
-			if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
-				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-						userDetails, null, userDetails.getAuthorities());
-				usernamePasswordAuthenticationToken
-						.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-			}
-		}
-
-		chain.doFilter(request, response);
-	}
+        chain.doFilter(request, response);
+    }
 }

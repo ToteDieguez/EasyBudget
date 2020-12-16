@@ -2,7 +2,10 @@ package com.easybudget.application;
 
 import com.easybudget.user.auth.JwtTokenAuthorizationOncePerRequestFilter;
 import com.easybudget.user.auth.JwtUnAuthorizedResponseAuthenticationEntryPoint;
+import com.easybudget.user.auth.exception.AuthenticationException;
 import com.easybudget.user.auth.service.AuthPersonServiceDetail;
+import com.easybudget.user.person.Person;
+import com.easybudget.user.person.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,9 +17,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.Optional;
+import java.util.function.Function;
 
 @Configuration
 public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -29,6 +36,9 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private JwtTokenAuthorizationOncePerRequestFilter jwtAuthenticationTokenFilter;
+
+	@Autowired
+	private PersonService personService;
 
 	@Value("${jwt.get.token.uri}")
 	private String authenticationPath;
@@ -70,5 +80,14 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/" // Other Stuff You want to Ignore
 				).and().ignoring()
 				.antMatchers("/h2-console/**/**");// Should not be done in Production!
+	}
+
+	@Bean
+	public Function<UserDetails, Person> fetchUser() {
+		return (principal -> {
+			String username = principal.getUsername();
+			Optional<Person> person = personService.findByUsername(username);
+			return person.orElseThrow(() -> new AuthenticationException("No user found, please login.", new IllegalAccessError()));
+		});
 	}
 }
