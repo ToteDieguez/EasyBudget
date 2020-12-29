@@ -24,7 +24,6 @@ import java.io.IOException;
 
 @Component
 @Slf4j
-@AllArgsConstructor
 public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFilter {
 
     private AuthPersonServiceDetailImpl jwtInMemoryUserDetailsService;
@@ -32,6 +31,12 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
 
     @Value("${jwt.http.request.header}")
     private String tokenHeader;
+
+    @Autowired
+    public JwtTokenAuthorizationOncePerRequestFilter(AuthPersonServiceDetailImpl jwtInMemoryUserDetailsService, JwtTokenUtil jwtTokenUtil) {
+        this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HandleAuthenticationService } from 'src/app/services/authentication/handle-authentication.service';
 import { Router } from '@angular/router';
+import { HandleAuthenticationService } from '../../../services/authentication/handle-authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -18,8 +18,12 @@ export class LoginComponent implements OnInit {
   }
 
   logIn() {
-    if (this.handleAuthenticationService.authenticateUser(this.username, this.password)) {
-      this.route.navigate(['budgets']);
-    }
+    this.handleAuthenticationService.authenticateUser(this.username, this.password).subscribe(
+      data => {
+        this.route.navigate(['budgets']);
+      },
+      error => {
+        console.log(error);
+      });
   }
 }

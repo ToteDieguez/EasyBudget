@@ -13,7 +13,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { LoginComponent } from './components/login/login/login.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { MaterialModule } from './material-module';
-import { APIInterceptorService } from './interceptor/apiinterceptor.service';
+import {HttpInterceptorService} from './interceptor/http/http-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +36,7 @@ import { APIInterceptorService } from './interceptor/apiinterceptor.service';
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
-    useClass: APIInterceptorService,
+    useClass: HttpInterceptorService,
     multi: true,
   }],
   bootstrap: [AppComponent]

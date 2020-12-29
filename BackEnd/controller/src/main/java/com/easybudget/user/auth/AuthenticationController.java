@@ -27,7 +27,6 @@ import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
-@AllArgsConstructor
 public class AuthenticationController {
 
     private AuthenticationManager authenticationManager;
@@ -36,6 +35,13 @@ public class AuthenticationController {
 
     @Value("${jwt.http.request.header}")
     private String tokenHeader;
+
+    @Autowired
+    public AuthenticationController(AuthenticationManager authenticationManager, AuthTokenUtil authTokenUtil, AuthPersonServiceDetail authPersonServiceDetail) {
+        this.authenticationManager = authenticationManager;
+        this.authTokenUtil = authTokenUtil;
+        this.authPersonServiceDetail = authPersonServiceDetail;
+    }
 
     @PostMapping(value = "${jwt.get.token.uri}")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody TokenRequest authenticationRequest)
