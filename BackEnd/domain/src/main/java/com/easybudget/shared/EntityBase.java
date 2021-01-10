@@ -1,13 +1,20 @@
 package com.easybudget.shared;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Version;
+import java.util.Date;
 
 /**
  * Base class for an entity, as explained in the book "Domain Driven Design".
@@ -23,6 +30,10 @@ import javax.persistence.Version;
 @MappedSuperclass
 @Getter
 @Setter
+@JsonIgnoreProperties(
+        value = {"createdAt", "updatedAt"},
+        allowGetters = true
+)
 public abstract class EntityBase<T extends EntityBase<T>> {
 
     @Id
@@ -31,6 +42,16 @@ public abstract class EntityBase<T extends EntityBase<T>> {
 
     @Version
     private Long version;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "createdAt", updatable = false)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updatedAt")
+    private Date updatedAt;
 
     /**
      * Returns the identity of this entity object.

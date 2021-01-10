@@ -52,16 +52,6 @@ public class Person extends EntityBase<Person> implements UserDetails {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "createDate")
-    private Date createDate;
-
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modifyDate")
-    private Date modifyDate;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
