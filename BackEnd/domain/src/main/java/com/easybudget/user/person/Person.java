@@ -2,6 +2,7 @@ package com.easybudget.user.person;
 
 import com.easybudget.shared.EntityBase;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -24,6 +25,10 @@ import java.util.Date;
 @Entity
 @Table(name = "person")
 @Getter
+@JsonIgnoreProperties(
+        value = {"password", "accountNonExpired", "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"},
+        allowGetters = true
+)
 public class Person extends EntityBase<Person> implements UserDetails {
 
     @Column(name = "username", nullable = false)
@@ -36,7 +41,6 @@ public class Person extends EntityBase<Person> implements UserDetails {
     private String lastName;
 
     @Column(name = "password", nullable = false)
-    @JsonIgnore
     @Transient
     private String password;
 

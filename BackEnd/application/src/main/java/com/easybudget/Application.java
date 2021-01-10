@@ -1,4 +1,4 @@
-package com.easybudget.application;
+package com.easybudget;
 
 import com.easybudget.user.auth.JwtTokenAuthorizationOncePerRequestFilter;
 import com.easybudget.user.auth.JwtUnAuthorizedResponseAuthenticationEntryPoint;
