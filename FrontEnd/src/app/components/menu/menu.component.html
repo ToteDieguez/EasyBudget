@@ -1,6 +1,6 @@
 <div class="mat-app-background basic-container main-background-color" *ngIf="handleAuthenticationService.isUserLoggedIn()">
     <button mat-button routerLink="budgets">Budgets</button>
     <button mat-button >Reports</button>
-    <button mat-button >Settings</button>
+    <button mat-button routerLink="templates">Templates</button>
     <button mat-button (click)="logOut()" routerLink="login" >Logout</button>
 </div>

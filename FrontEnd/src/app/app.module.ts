@@ -14,6 +14,7 @@ import { LoginComponent } from './components/login/login/login.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { MaterialModule } from './material-module';
 import {HttpInterceptorService} from './interceptor/http/http-interceptor.service';
+import { TemplateComponent } from './components/template/template/template.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {HttpInterceptorService} from './interceptor/http/http-interceptor.servic
     BudgetComponent,
     PageNotFoundComponent,
     MenuComponent,
-    FooterComponent
+    FooterComponent,
+    TemplateComponent
   ],
   imports: [
     BrowserModule,
