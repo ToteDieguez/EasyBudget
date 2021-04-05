@@ -20,9 +20,9 @@ public class CategoryController {
 
     private CategoryService categoryService;
 
-    @PostMapping("/save")
-    public Category saveCategory(@CurrentUser Person person, @RequestBody CategoryCreation categoryCreation) {
+    @PostMapping("/create")
+    public Category createCategory(@CurrentUser Person person, @RequestBody CategoryCreation categoryCreation) {
         Category category = new Category(categoryCreation.getName(), CategoryType.getCategoryType(categoryCreation.getType()), person);
-        return categoryService.save(category);
+        return categoryService.create(category);
     }
 }

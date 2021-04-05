@@ -16,7 +16,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     @Transactional
-    public Category save(Category category) {
+    public Category create(Category category) {
         return categoryJPARepository.save(category);
     }
 

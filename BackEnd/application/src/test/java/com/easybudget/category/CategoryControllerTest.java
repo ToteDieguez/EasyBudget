@@ -42,18 +42,18 @@ public class CategoryControllerTest extends IntegrationTestConfig {
 
     @Before
     public void setup() {
-        this.mockMvc = mockMVCWithSecurity(target, springSecurityFilterChain);
+        this.mockMvc = super.mockMVCWithSecurity(target, springSecurityFilterChain);
     }
 
     @Test
-    public void saveCategory() throws Exception {
+    public void createCategory_shouldCreateACategory_whenAttributesAreSetProperly() throws Exception {
         //given
         CategoryCreation categoryCreation = new CategoryCreation();
         categoryCreation.setName("test");
         categoryCreation.setType("EXPENSE");
         //when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
-                .post("/category/save")
+                .post("/category/create")
                 .content(new ObjectMapper().writeValueAsString(categoryCreation))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
