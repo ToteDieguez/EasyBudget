@@ -1,6 +1,7 @@
 package com.easybudget.category;
 
 import com.easybudget.category.repository.CategoryRepository;
+import com.easybudget.user.person.Person;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -36,14 +37,15 @@ public class CategoryServiceImplTest {
     }
 
     @Test
-    public void findById() {
+    public void findByIdAndPerson() {
         //given
         final Long CATEGORY_ID = 1l;
-        doReturn(Optional.of(new Category())).when(categoryRepository).findById(any(Long.class));
+        final Person person = new Person();
+        doReturn(Optional.of(new Category())).when(categoryRepository).findByIdAndPerson(any(Long.class), any(Person.class));
         //when
-        target.findById(CATEGORY_ID);
+        target.findByIdAndPerson(CATEGORY_ID, person);
         //then
-        verify(categoryRepository).findById(CATEGORY_ID);
+        verify(categoryRepository).findByIdAndPerson(CATEGORY_ID, person);
         verifyNoMoreInteractions(categoryRepository);
     }
 }

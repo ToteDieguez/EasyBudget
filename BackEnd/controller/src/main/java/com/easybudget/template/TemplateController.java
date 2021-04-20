@@ -6,10 +6,13 @@ import com.easybudget.user.person.service.security.CurrentUser;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/template")
@@ -19,21 +22,19 @@ public class TemplateController {
 
     private TemplateService templateService;
 
-    @PostMapping("/create")
-    public Template createTemplate(@CurrentUser Person person, @RequestParam String name) {
+    @PostMapping
+    public Template create(@CurrentUser Person person, @RequestParam String name) {
         Template template = new Template(name, person);
         return templateService.create(template);
     }
 
-    @GetMapping("/get/all")
-    public Template getAllTemplates (@CurrentUser Person person, @RequestParam String name) {
-        Template template = new Template(name, person);
-        return templateService.create(template);
+    @GetMapping("/all")
+    public List<Template> findAll(@CurrentUser Person person) {
+        return templateService.findByPerson(person);
     }
 
-    @PostMapping("/add/category")
-    public Template addCategory(@CurrentUser Person person, @RequestParam String name) {
-        Template template = new Template(name, person);
-        return templateService.addCategoryToTemplate(null, null);
+    @PostMapping("/{templateID}/category/{categoryID}")
+    public Template addCategory(@PathVariable Long templateID, @PathVariable Long categoryID, @CurrentUser Person person) {
+        return templateService.addCategoryToTemplate(templateID, categoryID, person);
     }
 }

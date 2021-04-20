@@ -4,6 +4,7 @@ import com.easybudget.category.Category;
 import com.easybudget.category.service.CategoryService;
 import com.easybudget.template.repository.TemplateRepository;
 import com.easybudget.template.service.TemplateService;
+import com.easybudget.user.person.Person;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +26,9 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     @Override
-    public Template addCategoryToTemplate(Long templateID, Long categoryID) {
-        Template template = findById(templateID).orElseThrow(NoSuchElementException::new);
-        Category category = categoryService.findById(categoryID).orElseThrow(NoSuchElementException::new);
+    public Template addCategoryToTemplate(Long templateID, Long categoryID, Person person) {
+        Template template = this.findByIdAndPerson(templateID, person).orElseThrow(NoSuchElementException::new);
+        Category category = categoryService.findByIdAndPerson(categoryID, person).orElseThrow(NoSuchElementException::new);
         boolean isCategoryInTemplate = template.getCategories().stream()
                 .filter(categoryInTemplate -> categoryInTemplate.equals(category))
                 .findFirst()
@@ -40,12 +41,13 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     @Override
-    public Optional<Template> findById(Long templateID) {
-        return templateRepository.findById(templateID);
+    public Optional<Template> findByIdAndPerson(Long templateID, Person person) {
+        return templateRepository.findByIdAndPerson(templateID, person);
     }
 
     @Override
-    public List<Template> findAll(Long id) {
-        return null;
+    public List<Template> findByPerson(Person person) {
+        return templateRepository.findByPerson(person);
     }
+
 }

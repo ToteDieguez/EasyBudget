@@ -10,7 +10,7 @@ public interface TemplateRepository {
 
     Template create(Template template);
 
-    Optional<Template> findById(Long templateID);
+    Optional<Template> findByIdAndPerson(Long templateID, Person person);
 
-    List<Template> findTemplatesByPerson(Person person);
+    List<Template> findByPerson(Person person);
 }

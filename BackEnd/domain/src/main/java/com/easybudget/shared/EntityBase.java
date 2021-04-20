@@ -1,8 +1,7 @@
 package com.easybudget.shared;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -29,11 +28,6 @@ import java.util.Date;
  */
 @MappedSuperclass
 @Getter
-@Setter
-@JsonIgnoreProperties(
-        value = {"createdAt", "updatedAt"},
-        allowGetters = true
-)
 public abstract class EntityBase<T extends EntityBase<T>> {
 
     @Id
@@ -41,16 +35,19 @@ public abstract class EntityBase<T extends EntityBase<T>> {
     private Long id;
 
     @Version
+    @JsonIgnore
     private Long version;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdAt", updatable = false)
+    @JsonIgnore
     private Date createdAt;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updatedAt")
+    @JsonIgnore
     private Date updatedAt;
 
     /**

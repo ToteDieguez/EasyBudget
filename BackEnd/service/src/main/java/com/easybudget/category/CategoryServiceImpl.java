@@ -2,11 +2,11 @@ package com.easybudget.category;
 
 import com.easybudget.category.repository.CategoryRepository;
 import com.easybudget.category.service.CategoryService;
+import com.easybudget.user.person.Person;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -22,7 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Optional<Category> findById(Long categoryID) {
-        return categoryRepository.findById(categoryID);
+    public Optional<Category> findByIdAndPerson(Long categoryID, Person person) {
+        return categoryRepository.findByIdAndPerson(categoryID, person);
     }
 }

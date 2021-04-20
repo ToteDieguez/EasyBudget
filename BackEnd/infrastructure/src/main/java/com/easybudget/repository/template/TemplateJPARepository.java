@@ -5,8 +5,11 @@ import com.easybudget.user.person.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TemplateJPARepository extends JpaRepository<Template, Long> {
 
-    List<Template> findTemplatesByPerson(Person person);
+    Optional<Template> findByIdAndPerson(Long templateID, Person person);
+
+    List<Template> findByPerson(Person person);
 }

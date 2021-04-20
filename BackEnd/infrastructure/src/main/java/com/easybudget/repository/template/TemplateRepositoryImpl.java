@@ -21,12 +21,12 @@ public class TemplateRepositoryImpl implements TemplateRepository {
     }
 
     @Override
-    public Optional<Template> findById(Long templateID) {
-        return templateJPARepository.findById(templateID);
+    public Optional<Template> findByIdAndPerson(Long templateID, Person person) {
+        return templateJPARepository.findByIdAndPerson(templateID, person);
     }
 
     @Override
     public List<Template> findByPerson(Person person) {
-        return templateJPARepository.findTemplatesByPerson(person);
+        return templateJPARepository.findByPerson(person);
     }
 }
