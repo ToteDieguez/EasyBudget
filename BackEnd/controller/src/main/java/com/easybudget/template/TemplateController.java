@@ -23,9 +23,8 @@ public class TemplateController {
     private TemplateService templateService;
 
     @PostMapping
-    public Template create(@CurrentUser Person person, @RequestParam String name) {
-        Template template = new Template(name, person);
-        return templateService.create(template);
+    public Template create(@RequestParam String name, @CurrentUser Person person) {
+        return templateService.create(name, person);
     }
 
     @GetMapping("/all")
@@ -34,7 +33,7 @@ public class TemplateController {
     }
 
     @PostMapping("/{templateID}/category/{categoryID}")
-    public Template addCategory(@PathVariable Long templateID, @PathVariable Long categoryID, @CurrentUser Person person) {
+    public Template addCategoryToTemplate(@PathVariable Long templateID, @PathVariable Long categoryID, @CurrentUser Person person) {
         return templateService.addCategoryToTemplate(templateID, categoryID, person);
     }
 }

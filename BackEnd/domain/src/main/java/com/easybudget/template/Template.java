@@ -21,10 +21,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "template")
-@Getter
 public class Template extends EntityBase<Template> {
 
     @Column(name = "name", nullable = false)
+    @Getter
     private String name;
 
     @ManyToMany
@@ -33,6 +33,7 @@ public class Template extends EntityBase<Template> {
             joinColumns = @JoinColumn(name = "template_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"),
             foreignKey = @ForeignKey(name = "Fk_template__template_category"))
+    @Getter
     private Set<Category> categories;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
@@ -49,4 +50,9 @@ public class Template extends EntityBase<Template> {
         this.name = name;
         this.person = person;
     }
+
+    public void addCategory(Category category){
+        this.categories.add(category);
+    }
+
 }

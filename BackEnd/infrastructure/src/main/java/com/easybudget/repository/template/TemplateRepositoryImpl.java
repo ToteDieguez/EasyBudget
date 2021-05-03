@@ -16,7 +16,7 @@ public class TemplateRepositoryImpl implements TemplateRepository {
     private TemplateJPARepository templateJPARepository;
 
     @Override
-    public Template create(Template template) {
+    public Template save(Template template) {
         return templateJPARepository.save(template);
     }
 

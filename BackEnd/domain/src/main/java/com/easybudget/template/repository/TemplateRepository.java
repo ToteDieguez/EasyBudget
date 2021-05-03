@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface TemplateRepository {
 
-    Template create(Template template);
+    Template save(Template template);
 
     Optional<Template> findByIdAndPerson(Long templateID, Person person);
 

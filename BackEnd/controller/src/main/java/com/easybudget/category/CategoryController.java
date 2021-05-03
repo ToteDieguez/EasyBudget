@@ -7,10 +7,14 @@ import com.easybudget.user.person.Person;
 import com.easybudget.user.person.service.security.CurrentUser;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/category")
@@ -24,5 +28,10 @@ public class CategoryController {
     public Category create(@CurrentUser Person person, @RequestBody CategoryCreation categoryCreation) {
         Category category = new Category(categoryCreation.getName(), CategoryType.getCategoryType(categoryCreation.getType()), person);
         return categoryService.create(category);
+    }
+
+    @GetMapping("/{id}")
+    public Optional<Category> findCategory(@PathVariable Long id, @CurrentUser Person person) {
+        return categoryService.findByIdAndPerson(id, person);
     }
 }

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface TemplateService {
 
-    Template create(Template template);
+    Template create(String templateName, Person person);
 
     Template addCategoryToTemplate(Long templateID, Long categoryID, Person person);
 

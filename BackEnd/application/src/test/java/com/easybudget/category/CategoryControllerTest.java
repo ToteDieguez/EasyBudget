@@ -4,6 +4,7 @@ import com.easybudget.category.dto.CategoryCreation;
 import com.easybudget.category.service.CategoryService;
 import com.easybudget.category.type.CategoryType;
 import com.easybudget.config.IntegrationTestConfig;
+import com.easybudget.template.Template;
 import com.easybudget.user.person.Person;
 import com.easybudget.user.person.service.PersonService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -69,6 +71,24 @@ public class CategoryControllerTest extends IntegrationTestConfig {
         assertTrue(savedCategory.isPresent());
         assertEquals("test", savedCategory.get().getName());
         assertEquals(CategoryType.EXPENSE, savedCategory.get().getType());
+    }
+
+
+    @Test
+    public void findCategory() throws Exception {
+        //given
+        //when
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get("/category/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+        //then
+        resultActions.andExpect(status().isOk());
+        Category category = new ObjectMapper().readValue(resultActions.andReturn().getResponse().getContentAsString(), Category.class);
+        assertEquals("House", category.getName());
+        assertEquals(CategoryType.EXPENSE, category.getType());
+        assertEquals(1, category.getSubCategories().size(), 0);
+        assertEquals("Rent", category.getSubCategories().get(0).getName());
     }
 
 }
