@@ -1,5 +1,6 @@
 package com.easybudget.template;
 
+import com.easybudget.template.dto.TemplateDTO;
 import com.easybudget.template.service.TemplateService;
 import com.easybudget.user.person.Person;
 import com.easybudget.user.person.service.security.CurrentUser;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/template")
@@ -23,17 +25,28 @@ public class TemplateController {
     private TemplateService templateService;
 
     @PostMapping
-    public Template create(@RequestParam String name, @CurrentUser Person person) {
-        return templateService.create(name, person);
+    public TemplateDTO create(@RequestParam String name, @CurrentUser Person person) {
+        Template template = templateService.create(name, person.getPersonID());
+        return this.templateDTOMapper(template);
     }
 
     @GetMapping("/all")
-    public List<Template> findAll(@CurrentUser Person person) {
-        return templateService.findByPerson(person);
+    public List<TemplateDTO> findAll(@CurrentUser Person person) {
+        return templateService.findByPersonID(person.getPersonID())
+                .stream()
+                .map(template -> this.templateDTOMapper(template))
+                .collect((Collectors.toList()));
     }
 
     @PostMapping("/{templateID}/category/{categoryID}")
     public Template addCategoryToTemplate(@PathVariable Long templateID, @PathVariable Long categoryID, @CurrentUser Person person) {
-        return templateService.addCategoryToTemplate(templateID, categoryID, person);
+        return templateService.addCategoryToTemplate(templateID, categoryID, person.getPersonID());
+    }
+
+    private TemplateDTO templateDTOMapper(Template template){
+        TemplateDTO templateDTO = new TemplateDTO();
+        templateDTO.setTemplateID(template.getId());
+        templateDTO.setName(template.getName());
+        return templateDTO;
     }
 }

@@ -1,18 +1,18 @@
 package com.easybudget.template.service;
 
 import com.easybudget.template.Template;
-import com.easybudget.user.person.Person;
+import com.easybudget.user.person.PersonID;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TemplateService {
 
-    Template create(String templateName, Person person);
+    Template create(String templateName, PersonID personID);
 
-    Template addCategoryToTemplate(Long templateID, Long categoryID, Person person);
+    Template addCategoryToTemplate(Long templateID, Long categoryID, PersonID personID);
 
-    Optional<Template> findByIdAndPerson(Long templateID, Person person);
+    Optional<Template> findByIdAndPerson(Long templateID, PersonID personID);
 
-    List<Template> findByPerson(Person person);
+    List<Template> findByPersonID(PersonID personID);
 }

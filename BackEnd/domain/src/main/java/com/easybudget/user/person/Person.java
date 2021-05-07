@@ -60,4 +60,8 @@ public class Person extends EntityBase<Person> implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
     }
+
+    public PersonID getPersonID (){
+        return new PersonID(this.getId());
+    }
 }

@@ -3,6 +3,7 @@ package com.easybudget.category;
 import com.easybudget.category.repository.CategoryRepository;
 import com.easybudget.category.service.CategoryService;
 import com.easybudget.user.person.Person;
+import com.easybudget.user.person.PersonID;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Category> findByIdAndPerson(Long categoryID, Person person) {
-        return categoryRepository.findByIdAndPerson(categoryID, person);
+    public Optional<Category> findByIdAndPersonID(Long categoryID, PersonID personID) {
+        return categoryRepository.findByIdAndPersonID(categoryID, personID);
     }
 }

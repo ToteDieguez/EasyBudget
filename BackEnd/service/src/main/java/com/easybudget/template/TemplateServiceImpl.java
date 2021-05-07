@@ -5,6 +5,7 @@ import com.easybudget.category.service.CategoryService;
 import com.easybudget.template.repository.TemplateRepository;
 import com.easybudget.template.service.TemplateService;
 import com.easybudget.user.person.Person;
+import com.easybudget.user.person.PersonID;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,39 +24,30 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     @Transactional
-    public Template create(String templateName, Person person) {
-        Template template = new Template(templateName, person);
+    public Template create(String templateName, PersonID personID) {
+        Template template = new Template(templateName, personID);
         return templateRepository.save(template);
     }
 
     @Override
     @Transactional
-    public Template addCategoryToTemplate(Long templateID, Long categoryID, Person person) {
-        Template template = this.findByIdAndPerson(templateID, person).orElseThrow(NoSuchElementException::new);
-        Category category = categoryService.findByIdAndPerson(categoryID, person).orElseThrow(NoSuchElementException::new);
-        boolean isCategoryInTemplate = template.getCategories()
-                .stream()
-                .filter(categoryInTemplate -> categoryInTemplate.equals(category))
-                .findFirst()
-                .isPresent();
-        if (Boolean.TRUE.equals(isCategoryInTemplate)) {
-            return template;
-        } else {
-            template.addCategory(category);
-            return templateRepository.save(template);
-        }
+    public Template addCategoryToTemplate(Long templateID, Long categoryID, PersonID personID) {
+        Template template = this.findByIdAndPerson(templateID, personID).orElseThrow(NoSuchElementException::new);
+        Category category = categoryService.findByIdAndPersonID(categoryID, personID).orElseThrow(NoSuchElementException::new);
+        template.addCategory(category);
+        return templateRepository.save(template);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Template> findByIdAndPerson(Long templateID, Person person) {
-        return templateRepository.findByIdAndPerson(templateID, person);
+    public Optional<Template> findByIdAndPerson(Long templateID, PersonID personID) {
+        return templateRepository.findByIdAndPersonID(templateID, personID);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Template> findByPerson(Person person) {
-        return templateRepository.findByPerson(person);
+    public List<Template> findByPersonID(PersonID personID) {
+        return templateRepository.findByPersonID(personID);
     }
 
 }

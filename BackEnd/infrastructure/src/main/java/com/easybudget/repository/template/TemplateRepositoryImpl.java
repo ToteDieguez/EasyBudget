@@ -3,6 +3,7 @@ package com.easybudget.repository.template;
 import com.easybudget.template.Template;
 import com.easybudget.template.repository.TemplateRepository;
 import com.easybudget.user.person.Person;
+import com.easybudget.user.person.PersonID;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -21,12 +22,12 @@ public class TemplateRepositoryImpl implements TemplateRepository {
     }
 
     @Override
-    public Optional<Template> findByIdAndPerson(Long templateID, Person person) {
-        return templateJPARepository.findByIdAndPerson(templateID, person);
+    public Optional<Template> findByIdAndPersonID(Long templateID, PersonID personID) {
+        return templateJPARepository.findByIdAndPersonID(templateID, personID);
     }
 
     @Override
-    public List<Template> findByPerson(Person person) {
-        return templateJPARepository.findByPerson(person);
+    public List<Template> findByPersonID(PersonID personID) {
+        return templateJPARepository.findByPersonID(personID);
     }
 }

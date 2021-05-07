@@ -3,11 +3,14 @@ package com.easybudget.template;
 import com.easybudget.category.Category;
 import com.easybudget.shared.EntityBase;
 import com.easybudget.user.person.Person;
+import com.easybudget.user.person.PersonID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
@@ -16,7 +19,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -34,25 +39,30 @@ public class Template extends EntityBase<Template> {
             inverseJoinColumns = @JoinColumn(name = "category_id"),
             foreignKey = @ForeignKey(name = "Fk_template__template_category"))
     @Getter
-    private Set<Category> categories;
+    private List<Category> categories;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @Embedded
     @JoinColumn(name = "person_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "Fk_template_person"))
-    @JsonIgnore
-    private Person person;
+    private PersonID personID;
 
     public Template() {
-        this.categories = new HashSet<>();
+        this.categories = new ArrayList<>();
     }
 
-    public Template(String name, Person person) {
+    public Template(String name, PersonID personID) {
         this();
         this.name = name;
-        this.person = person;
+        this.personID = personID;
     }
 
-    public void addCategory(Category category){
-        this.categories.add(category);
+    public void addCategory(Category category) {
+        boolean isCategoryInTemplate = this.getCategories()
+                .stream()
+                .filter(categoryInTemplate -> categoryInTemplate.equals(category))
+                .findFirst().isPresent();
+        if (!isCategoryInTemplate) {
+            this.categories.add(category);
+        }
     }
 
 }

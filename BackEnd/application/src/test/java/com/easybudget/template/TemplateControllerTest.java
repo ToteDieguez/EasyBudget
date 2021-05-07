@@ -64,8 +64,8 @@ public class TemplateControllerTest extends IntegrationTestConfig {
                 .accept(MediaType.APPLICATION_JSON));
         //then
         resultActions.andExpect(status().isOk());
-        Long templateID = new ObjectMapper().readValue(resultActions.andReturn().getResponse().getContentAsString(), JsonNode.class).get("id").asLong();
-        Optional<Template> savedTemplate = templateService.findByIdAndPerson(templateID, this.person);
+        Long templateID = new ObjectMapper().readValue(resultActions.andReturn().getResponse().getContentAsString(), JsonNode.class).get("templateID").asLong();
+        Optional<Template> savedTemplate = templateService.findByIdAndPerson(templateID, this.person.getPersonID());
         assertTrue(savedTemplate.isPresent());
         assertEquals(TEMPLATE_NAME, savedTemplate.get().getName());
     }
@@ -87,7 +87,7 @@ public class TemplateControllerTest extends IntegrationTestConfig {
     @Test
     public void addCategoryToTemplate() throws Exception {
         //given
-        Optional<Template> savedTemplate = templateService.findByIdAndPerson(TEMPLATE_ID, this.person);
+        Optional<Template> savedTemplate = templateService.findByIdAndPerson(TEMPLATE_ID, this.person.getPersonID());
         assertTrue(savedTemplate.isPresent());
         assertTrue(savedTemplate.get().getCategories().isEmpty());
         //when

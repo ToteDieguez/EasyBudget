@@ -2,12 +2,16 @@ package com.easybudget.category;
 
 import com.easybudget.category.repository.CategoryRepository;
 import com.easybudget.user.person.Person;
+import com.easybudget.user.person.PersonID;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -24,6 +28,16 @@ public class CategoryServiceImplTest {
     @Mock
     private CategoryRepository categoryRepository;
 
+    private static final Long PERSON_ID = 10l;
+
+    private Person person;
+
+    @Before
+    public void setup() {
+        this.person = new Person();
+        ReflectionTestUtils.setField(this.person, "id", PERSON_ID);
+    }
+
     @Test
     public void save() {
         //given
@@ -37,15 +51,14 @@ public class CategoryServiceImplTest {
     }
 
     @Test
-    public void findByIdAndPerson() {
+    public void findByIdAndPersonID() {
         //given
         final Long CATEGORY_ID = 1l;
-        final Person person = new Person();
-        doReturn(Optional.of(new Category())).when(categoryRepository).findByIdAndPerson(any(Long.class), any(Person.class));
+        doReturn(Optional.of(new Category())).when(categoryRepository).findByIdAndPersonID(any(Long.class), any(PersonID.class));
         //when
-        target.findByIdAndPerson(CATEGORY_ID, person);
+        target.findByIdAndPersonID(CATEGORY_ID, person.getPersonID());
         //then
-        verify(categoryRepository).findByIdAndPerson(CATEGORY_ID, person);
+        verify(categoryRepository).findByIdAndPersonID(CATEGORY_ID, person.getPersonID());
         verifyNoMoreInteractions(categoryRepository);
     }
 }
