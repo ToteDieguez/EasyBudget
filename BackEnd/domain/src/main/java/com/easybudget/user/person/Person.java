@@ -1,11 +1,8 @@
 package com.easybudget.user.person;
 
 import com.easybudget.shared.EntityBase;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.Transient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,11 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Version;
 import java.util.Collection;
-import java.util.Date;
 
 @Entity
 @Table(name = "person")
@@ -29,7 +22,12 @@ import java.util.Date;
         value = {"password", "accountNonExpired", "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"},
         allowGetters = true
 )
-public class Person extends EntityBase<Person> implements UserDetails {
+public class Person extends EntityBase<PersonID> implements UserDetails {
+
+    @Id
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -61,7 +59,8 @@ public class Person extends EntityBase<Person> implements UserDetails {
         return null;
     }
 
-    public PersonID getPersonID (){
-        return new PersonID(this.getId());
+    public PersonID id(){
+        return new PersonID(this.id);
     }
+
 }

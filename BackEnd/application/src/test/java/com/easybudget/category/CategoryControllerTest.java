@@ -64,8 +64,8 @@ public class CategoryControllerTest extends IntegrationTestConfig {
                 .accept(MediaType.APPLICATION_JSON));
         //then
         resultActions.andExpect(status().isOk());
-        Category category = new ObjectMapper().readValue(resultActions.andReturn().getResponse().getContentAsString(), Category.class);
-        Optional<Category> savedCategory = categoryService.findByIdAndPersonID(category.getId(), person.getPersonID());
+        CategoryDTO category = new ObjectMapper().readValue(resultActions.andReturn().getResponse().getContentAsString(), CategoryDTO.class);
+        Optional<Category> savedCategory = categoryService.findByIdAndPersonID(category.getId(), person.id());
         assertTrue(savedCategory.isPresent());
         assertEquals("test", savedCategory.get().getName());
         assertEquals(CategoryType.EXPENSE, savedCategory.get().getType());
@@ -82,11 +82,11 @@ public class CategoryControllerTest extends IntegrationTestConfig {
                 .accept(MediaType.APPLICATION_JSON));
         //then
         resultActions.andExpect(status().isOk());
-        Category category = new ObjectMapper().readValue(resultActions.andReturn().getResponse().getContentAsString(), Category.class);
+        CategoryDTO category = new ObjectMapper().readValue(resultActions.andReturn().getResponse().getContentAsString(), CategoryDTO.class);
         assertEquals("House", category.getName());
-        assertEquals(CategoryType.EXPENSE, category.getType());
+        assertEquals(CategoryType.EXPENSE.name(), category.getType());
         assertEquals(1, category.getSubCategories().size(), 0);
-        assertEquals("Rent", category.getSubCategories().get(0).getName());
+        assertEquals("Rent", category.getSubCategories().get(1l));
     }
 
 }

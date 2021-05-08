@@ -1,5 +1,6 @@
 package com.easybudget.template;
 
+import com.easybudget.category.Category;
 import com.easybudget.template.dto.TemplateDTO;
 import com.easybudget.template.service.TemplateService;
 import com.easybudget.user.person.Person;
@@ -26,27 +27,28 @@ public class TemplateController {
 
     @PostMapping
     public TemplateDTO create(@RequestParam String name, @CurrentUser Person person) {
-        Template template = templateService.create(name, person.getPersonID());
+        Template template = templateService.create(name, person.id());
         return this.templateDTOMapper(template);
     }
 
     @GetMapping("/all")
     public List<TemplateDTO> findAll(@CurrentUser Person person) {
-        return templateService.findByPersonID(person.getPersonID())
+        return templateService.findByPersonID(person.id())
                 .stream()
                 .map(template -> this.templateDTOMapper(template))
                 .collect((Collectors.toList()));
     }
 
     @PostMapping("/{templateID}/category/{categoryID}")
-    public Template addCategoryToTemplate(@PathVariable Long templateID, @PathVariable Long categoryID, @CurrentUser Person person) {
-        return templateService.addCategoryToTemplate(templateID, categoryID, person.getPersonID());
+    public TemplateDTO addCategoryToTemplate(@PathVariable Long templateID, @PathVariable Long categoryID, @CurrentUser Person person) {
+        return this.templateDTOMapper(templateService.addCategoryToTemplate(templateID, categoryID, person.id()));
     }
 
     private TemplateDTO templateDTOMapper(Template template){
         TemplateDTO templateDTO = new TemplateDTO();
-        templateDTO.setTemplateID(template.getId());
+        templateDTO.setTemplateID(template.id());
         templateDTO.setName(template.getName());
+        templateDTO.setCategories(template.getCategories().stream().collect(Collectors.toMap(Category::id, Category::getName)));
         return templateDTO;
     }
 }

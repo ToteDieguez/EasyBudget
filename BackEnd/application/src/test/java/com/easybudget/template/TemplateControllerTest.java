@@ -1,6 +1,7 @@
 package com.easybudget.template;
 
 import com.easybudget.config.IntegrationTestConfig;
+import com.easybudget.template.dto.TemplateDTO;
 import com.easybudget.template.service.TemplateService;
 import com.easybudget.user.person.Person;
 import com.easybudget.user.person.service.PersonService;
@@ -65,7 +66,7 @@ public class TemplateControllerTest extends IntegrationTestConfig {
         //then
         resultActions.andExpect(status().isOk());
         Long templateID = new ObjectMapper().readValue(resultActions.andReturn().getResponse().getContentAsString(), JsonNode.class).get("templateID").asLong();
-        Optional<Template> savedTemplate = templateService.findByIdAndPerson(templateID, this.person.getPersonID());
+        Optional<Template> savedTemplate = templateService.findByIdAndPerson(templateID, this.person.id());
         assertTrue(savedTemplate.isPresent());
         assertEquals(TEMPLATE_NAME, savedTemplate.get().getName());
     }
@@ -87,7 +88,7 @@ public class TemplateControllerTest extends IntegrationTestConfig {
     @Test
     public void addCategoryToTemplate() throws Exception {
         //given
-        Optional<Template> savedTemplate = templateService.findByIdAndPerson(TEMPLATE_ID, this.person.getPersonID());
+        Optional<Template> savedTemplate = templateService.findByIdAndPerson(TEMPLATE_ID, this.person.id());
         assertTrue(savedTemplate.isPresent());
         assertTrue(savedTemplate.get().getCategories().isEmpty());
         //when
@@ -97,7 +98,7 @@ public class TemplateControllerTest extends IntegrationTestConfig {
                 .accept(MediaType.APPLICATION_JSON));
         //then
         resultActions.andExpect(status().isOk());
-        Template template = new ObjectMapper().readValue(resultActions.andReturn().getResponse().getContentAsString(), Template.class);
+        TemplateDTO template = new ObjectMapper().readValue(resultActions.andReturn().getResponse().getContentAsString(), TemplateDTO.class);
         assertEquals(1, template.getCategories().size(), 0);
     }
 }

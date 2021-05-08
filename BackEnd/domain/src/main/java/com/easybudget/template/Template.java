@@ -2,31 +2,31 @@ package com.easybudget.template;
 
 import com.easybudget.category.Category;
 import com.easybudget.shared.EntityBase;
-import com.easybudget.user.person.Person;
 import com.easybudget.user.person.PersonID;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "template")
-public class Template extends EntityBase<Template> {
+public class Template extends EntityBase<Long> {
+
+    @Id
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Column(name = "name", nullable = false)
     @Getter
@@ -65,4 +65,8 @@ public class Template extends EntityBase<Template> {
         }
     }
 
+    @Override
+    public Long id() {
+        return this.id;
+    }
 }

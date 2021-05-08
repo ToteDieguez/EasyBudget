@@ -53,11 +53,11 @@ public class TemplateServiceImplTest {
     @Test
     public void create() {
         //given
-        Template template = new Template(TEMPLATE_NAME, person.getPersonID());
+        Template template = new Template(TEMPLATE_NAME, person.id());
         ArgumentCaptor<Template> templateCaptor = ArgumentCaptor.forClass(Template.class);
         doReturn(template).when(templateRepository).save(templateCaptor.capture());
         //when
-        target.create(TEMPLATE_NAME, person.getPersonID());
+        target.create(TEMPLATE_NAME, person.id());
         //then
         template = templateCaptor.getValue();
         assertEquals(TEMPLATE_NAME, template.getName());
@@ -70,15 +70,15 @@ public class TemplateServiceImplTest {
         //given
         final Long CATEGORY_ID = 2l;
         Category category = new Category();
-        Template template = new Template(TEMPLATE_NAME, person.getPersonID());
+        Template template = new Template(TEMPLATE_NAME, person.id());
         doReturn(Optional.of(template)).when(templateRepository).findByIdAndPersonID(anyLong(), any(PersonID.class));
         doReturn(Optional.of(category)).when(categoryService).findByIdAndPersonID(anyLong(), any(PersonID.class));
         doReturn(template).when(templateRepository).save(any(Template.class));
         //when
-        target.addCategoryToTemplate(TEMPLATE_ID, CATEGORY_ID, person.getPersonID());
+        target.addCategoryToTemplate(TEMPLATE_ID, CATEGORY_ID, person.id());
         //then
-        verify(templateRepository).findByIdAndPersonID(TEMPLATE_ID, person.getPersonID());
-        verify(categoryService).findByIdAndPersonID(CATEGORY_ID, person.getPersonID());
+        verify(templateRepository).findByIdAndPersonID(TEMPLATE_ID, person.id());
+        verify(categoryService).findByIdAndPersonID(CATEGORY_ID, person.id());
         verify(templateRepository).save(template);
         verifyNoMoreInteractions(templateRepository, categoryService);
     }
@@ -89,12 +89,12 @@ public class TemplateServiceImplTest {
         final Long CATEGORY_ID = 2l;
         Category category = new Category();
         ReflectionTestUtils.setField(category, "id", CATEGORY_ID);
-        Template template = new Template(TEMPLATE_NAME, person.getPersonID());
+        Template template = new Template(TEMPLATE_NAME, person.id());
         template.addCategory(category);
         doReturn(Optional.of(template)).when(templateRepository).findByIdAndPersonID(anyLong(), any(PersonID.class));
         doReturn(Optional.empty()).when(categoryService).findByIdAndPersonID(anyLong(), any(PersonID.class));
         //when
-        target.addCategoryToTemplate(TEMPLATE_ID, CATEGORY_ID, person.getPersonID());
+        target.addCategoryToTemplate(TEMPLATE_ID, CATEGORY_ID, person.id());
         //then THROW EXCEPTION
     }
 
@@ -104,35 +104,35 @@ public class TemplateServiceImplTest {
         final Long CATEGORY_ID = 2l;
         Category category = new Category();
         ReflectionTestUtils.setField(category, "id", CATEGORY_ID);
-        Template template = new Template(TEMPLATE_NAME, person.getPersonID());
+        Template template = new Template(TEMPLATE_NAME, person.id());
         template.addCategory(category);
         doReturn(Optional.empty()).when(templateRepository).findByIdAndPersonID(anyLong(), any(PersonID.class));
         //when
-        target.addCategoryToTemplate(TEMPLATE_ID, CATEGORY_ID, person.getPersonID());
+        target.addCategoryToTemplate(TEMPLATE_ID, CATEGORY_ID, person.id());
         //then THROW EXCEPTION
     }
 
     @Test
     public void findByIdAndPersonID() {
         //given
-        Template template = new Template(TEMPLATE_NAME, person.getPersonID());
+        Template template = new Template(TEMPLATE_NAME, person.id());
         doReturn(Optional.of(template)).when(templateRepository).findByIdAndPersonID(anyLong(), any(PersonID.class));
         //when
-        target.findByIdAndPerson(TEMPLATE_ID, person.getPersonID());
+        target.findByIdAndPerson(TEMPLATE_ID, person.id());
         //then
-        verify(templateRepository).findByIdAndPersonID(TEMPLATE_ID, person.getPersonID());
+        verify(templateRepository).findByIdAndPersonID(TEMPLATE_ID, person.id());
         verifyNoMoreInteractions(templateRepository);
     }
 
     @Test
     public void findByPersonID() {
         //given
-        Template template = new Template(TEMPLATE_NAME, person.getPersonID());
+        Template template = new Template(TEMPLATE_NAME, person.id());
         doReturn(Arrays.asList(template)).when(templateRepository).findByPersonID(any(PersonID.class));
         //when
-        target.findByPersonID(person.getPersonID());
+        target.findByPersonID(person.id());
         //then
-        verify(templateRepository).findByPersonID(person.getPersonID());
+        verify(templateRepository).findByPersonID(person.id());
         verifyNoMoreInteractions(templateRepository);
     }
 }

@@ -56,9 +56,9 @@ public class CategoryServiceImplTest {
         final Long CATEGORY_ID = 1l;
         doReturn(Optional.of(new Category())).when(categoryRepository).findByIdAndPersonID(any(Long.class), any(PersonID.class));
         //when
-        target.findByIdAndPersonID(CATEGORY_ID, person.getPersonID());
+        target.findByIdAndPersonID(CATEGORY_ID, person.id());
         //then
-        verify(categoryRepository).findByIdAndPersonID(CATEGORY_ID, person.getPersonID());
+        verify(categoryRepository).findByIdAndPersonID(CATEGORY_ID, person.id());
         verifyNoMoreInteractions(categoryRepository);
     }
 }
